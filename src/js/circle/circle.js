@@ -1,5 +1,5 @@
 $( document ).ready(function() {
- // check to see if watch worksssssssss
+ // check to see if watch workssss
   $('textarea').autogrow({onInitialize: true});
 
   //Cloner for infinite input lists

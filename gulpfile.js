@@ -1,5 +1,18 @@
 'use strict';
 
+var express = require('express');
+var parser = require('body-parser');
+// var router = require('api-router');
+ 
+var app = express();
+var path = require('path');
+
+// require('./public/database.js'); // dot goes down one level 
+// require('./seed');
+
+var port = process.env.PORT;
+
+
 var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   rename = require('gulp-rename'),
@@ -18,12 +31,13 @@ var options = {
     dist: 'dist'
 };
 
+//sources watched for livereload
+var cssSources = [options.src + '/**/*.js'];
+var jsSources = [options.src + '/**/*.scss'];
+var allSources = cssSources.concat(jsSources);
+
 gulp.task('hello', function() {
   console.log('helloooo!');
-});
-
-gulp.task('default', ['hello'], function() {
-  console.log('This is the default task!!!!');
 });
 
 // Concatenates, minifies, stores new file as all.min.js located
@@ -37,8 +51,8 @@ gulp.task('scripts', function() {
 		   .pipe(uglify())
 		   .pipe(concat('all.min.js'))
 		   .pipe(maps.write('./'))
-		   .pipe(gulp.dest(options.dist + '/scripts'))
-		   .pipe(connect.reload());
+		   .pipe(gulp.dest(options.dist + '/scripts'));
+		   //.pipe(connect.reload());
 });
 
 // The scss files are concatendated and minified using CSSO.
@@ -75,28 +89,67 @@ gulp.task('build', ['clean', 'scripts', 'styles', 'images'], function() {
 });
 
 // The gulp default task
-gulp.task('default', function() {
+gulp.task('default', ['server', 'watch'], function() {
 	  gulp.start('build');
 });
 
-// The serve task will run build, connect and watch 
-gulp.task('serve', ['build', 'connect', 'watch']);
+//local-server
+gulp.task('server', function() {
+	app.listen(port, function() {
+    console.log("Theeee Frontend Server is Running....PORT" + port);
+    app.use('/static', express.static(__dirname +'/src'));  //static files
+    app.use('/dist', express.static(__dirname +'/dist'));  //static files
+	app.use(parser.json());
+	
+	app.set('view engine', 'jade');  //This is from the Jade
+	// part of the Treehouse Express Class.
+	app.set('views', __dirname + '/src/templates'); 
+	
+	app.get('/', function(req, res) {
+	    res.render('index.jade'); //The Jade Way--you don't have to use
+	                              // this jade extension / res.render('index.ejs');
+	});
+});
+  //connect.server({
+  //  root: 'app',
+  //  port: process.env.PORT,
+  //  host: process.env.IP,
+  //  livereload: true
+  //});
+});
 
-// Gulp task will reload browser
-gulp.task('connect', function() {
-	console.log('log task connect');
-    connect.server({
-        root: 'dist',
+//livereload
+gulp.task('livereload', function() {
+  gulp.src(allSources)
+    .pipe(connect.reload({
+        root: 'app',
         port: process.env.PORT,
+        host: process.env.IP,
         livereload: true
-    });
+    }));
 });
 
-// Runs the serve task and watches js files for a change. 
-// On js file change the scripts task runs
+//watch the file changes to trigger livereload
 gulp.task('watch', function() {
-	  console.log('log watch');
-	  gulp.watch(options.src + '/**/*.js', ['scripts']);
+  gulp.watch(allSources, ['livereload']);
 });
 
 
+
+// app.use('/static', express.static(__dirname +'/src'));  //static files
+// app.use(parser.json());
+
+// app.set('view engine', 'jade');  //This is from the Jade
+// // part of the Treehouse Express Class.
+// app.set('views', __dirname + '/src/templates'); //Use __dirname since we
+
+// app.get('/', function(req, res) {
+//     res.render('index.jade'); //The Jade Way--you don't have to use
+//                               // this jade extension / res.render('index.ejs');
+// });
+
+// app.use('/api', router);
+
+// app.listen(port, function() {
+//     console.log("Theeee Frontend Server is Running....PORT" + port);
+// });
