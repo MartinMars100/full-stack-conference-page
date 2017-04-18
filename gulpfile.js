@@ -31,12 +31,14 @@ gulp.task('default', ['hello'], function() {
 // Source maps are created with the name all.min.js.map and 
 // stored in the same dist/scripts folder.
 gulp.task('scripts', function() {
+	  console.log('log scripts');
 	  return gulp.src(options.src + '/**/*.js')
 		   .pipe(maps.init())
 		   .pipe(uglify())
 		   .pipe(concat('all.min.js'))
 		   .pipe(maps.write('./'))
-		   .pipe(gulp.dest(options.dist + '/scripts'));
+		   .pipe(gulp.dest(options.dist + '/scripts'))
+		   .pipe(connect.reload());
 });
 
 // The scss files are concatendated and minified using CSSO.
@@ -77,20 +79,24 @@ gulp.task('default', function() {
 	  gulp.start('build');
 });
 
-// Gulp task will start a server
-gulp.task('serve', ['build'], function() {
+// The serve task will run build, connect and watch 
+gulp.task('serve', ['build', 'connect', 'watch']);
+
+// Gulp task will reload browser
+gulp.task('connect', function() {
+	console.log('log task connect');
     connect.server({
         root: 'dist',
+        port: process.env.PORT,
         livereload: true
     });
 });
 
 // Runs the serve task and watches js files for a change. 
 // On js file change the scripts task runs
-gulp.task('watch', ['serve'], function() {
+gulp.task('watch', function() {
+	  console.log('log watch');
 	  gulp.watch(options.src + '/**/*.js', ['scripts']);
 });
-
-
 
 
