@@ -119,37 +119,13 @@ gulp.task('server', function() {
 });
 
 //livereload
-gulp.task('livereload', function() {
-  gulp.src(allSources)
-    .pipe(connect.reload({
-        root: 'app',
-        port: process.env.PORT,
-        host: process.env.IP,
-        livereload: true
-    }));
+gulp.task('livereload', ['build'], function() {
+    app.get('/', function(req, res) {
+    res.render('index.jade'); 
+    });
 });
 
 //watch the file changes to trigger livereload
 gulp.task('watch', function() {
   gulp.watch(allSources, ['livereload']);
 });
-
-
-
-// app.use('/static', express.static(__dirname +'/src'));  //static files
-// app.use(parser.json());
-
-// app.set('view engine', 'jade');  //This is from the Jade
-// // part of the Treehouse Express Class.
-// app.set('views', __dirname + '/src/templates'); //Use __dirname since we
-
-// app.get('/', function(req, res) {
-//     res.render('index.jade'); //The Jade Way--you don't have to use
-//                               // this jade extension / res.render('index.ejs');
-// });
-
-// app.use('/api', router);
-
-// app.listen(port, function() {
-//     console.log("Theeee Frontend Server is Running....PORT" + port);
-// });
