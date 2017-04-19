@@ -7,11 +7,10 @@ var parser = require('body-parser');
 var app = express();
 var path = require('path');
 
-// require('./public/database.js'); // dot goes down one level 
+// require('./public/database.js'); // dot goes down one level -----
 // require('./seed');
 
 var port = process.env.PORT;
-
 
 var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
@@ -101,27 +100,21 @@ gulp.task('server', function() {
     app.use('/dist', express.static(__dirname +'/dist'));  //static files
 	app.use(parser.json());
 	
-	app.set('view engine', 'jade');  //This is from the Jade
+	app.set('view engine', 'pug');  //This is from the Jade
 	// part of the Treehouse Express Class.
 	app.set('views', __dirname + '/src/templates'); 
 	
 	app.get('/', function(req, res) {
-	    res.render('index.jade'); //The Jade Way--you don't have to use
-	                              // this jade extension / res.render('index.ejs');
+	    res.render('index.pug'); 
 	});
 });
-  //connect.server({
-  //  root: 'app',
-  //  port: process.env.PORT,
-  //  host: process.env.IP,
-  //  livereload: true
-  //});
+ 
 });
 
 //livereload
 gulp.task('livereload', ['build'], function() {
     app.get('/', function(req, res) {
-    res.render('index.jade'); 
+    res.render('index.pug'); 
     });
 });
 
