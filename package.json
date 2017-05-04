@@ -7,6 +7,7 @@
   "devDependencies": {
     "api-router": "^0.1.10",
     "body-parser": "^1.17.1",
+    "connect-livereload": "^0.6.0",
     "del": "^2.2.2",
     "express": "^4.15.2",
     "gulp": "^3.9.1",
@@ -15,12 +16,16 @@
     "gulp-csso": "^3.0.0",
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^3.2.0",
+    "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.5.1",
     "gulp-uglify": "^2.1.2",
     "gulp-useref": "^3.1.2",
-    "pug": "^2.0.0-beta.12"
+    "opn": "^5.0.0",
+    "pug": "^2.0.0-beta.12",
+    "run-sequence": "^1.2.2",
+    "tiny-lr": "^1.0.4"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

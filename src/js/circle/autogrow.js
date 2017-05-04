@@ -1,5 +1,5 @@
 /*
-autogrow.js - Copyright (C) 2014, Jason Edelman <edelman.jason@gmail.com>
+autogrow.js - Copyrighttttt (C) 2014, Jason Edelman <edelman.jason@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to deal in the Software without restriction, including

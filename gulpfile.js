@@ -1,104 +1,83 @@
-'use strict';
-
+"use strict";
 var express = require('express');
-var parser = require('body-parser');
-// var router = require('api-router');
- 
 var app = express();
 var path = require('path');
 
-// require('./public/database.js'); // dot goes down one level -----
-// require('./seed');
-
 var port = process.env.PORT;
 
+//require modules
 var gulp = require('gulp'),
+  concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
   rename = require('gulp-rename'),
-imagemin = require('gulp-imagemin'),
-  concat = require('gulp-concat'),
     sass = require('gulp-sass'),
     maps = require('gulp-sourcemaps'),
-  useref = require('gulp-useref'),
+     del = require('del'),
+imagemin = require('gulp-imagemin'),
      iff = require('gulp-if'),
-    csso = require('gulp-csso'),
- connect = require('gulp-connect'),
-     del = require('del');
+csso = require('gulp-csso'),
+webserver = require('gulp-connect'),
+livereload = require('gulp-livereload'),
+runSequence = require('run-sequence'),
+cssmin = require('gulp-clean-css'),
+opn = require('opn');
 
 var options = {
     src: 'src',
     dist: 'dist'
 };
 
-//sources watched for livereload
-var cssSources = [options.src + '/**/*.js'];
-var jsSources = [options.src + '/**/*.scss'];
-var allSources = cssSources.concat(jsSources);
-
-gulp.task('hello', function() {
-  console.log('helloooo!');
+//concat the scripts
+gulp.task("concatScripts", function() {
+    return gulp.src([
+	     'src/js/circle/autogrow.js',
+	     'src/js/circle/circle.js'])
+	  .pipe(maps.init())
+	  .pipe(concat('global.js'))
+	  .pipe(maps.write('./'))
+	  .pipe(gulp.dest(options.dist + '/scripts'));
 });
 
-// Concatenates, minifies, stores new file as all.min.js located
-// in the dist/scripts folder
-// Source maps are created with the name all.min.js.map and 
-// stored in the same dist/scripts folder.
-gulp.task('scripts', function() {
-	  console.log('log scripts');
-	  return gulp.src(options.src + '/**/*.js')
-		   .pipe(maps.init())
-		   .pipe(uglify())
-		   .pipe(concat('all.min.js'))
-		   .pipe(maps.write('./'))
-		   .pipe(gulp.dest(options.dist + '/scripts'));
-		   //.pipe(connect.reload());
+//minify the scripts
+gulp.task("scripts", ["concatScripts"], function() {
+    return gulp.src(options.dist + 'scripts/global.js')
+    .pipe(maps.init())
+    .pipe(uglify(options.dist + 'scripts/global.js'))
+    .pipe(rename('app.min.js'))
+    .pipe(maps.write('./'))
+    .pipe(gulp.dest(options.dist + '/scripts'));
 });
 
-// The scss files are concatendated and minified using CSSO.
-// The new file is named all.min.css and stored in dist/styles folder.
-// A source map for the css files is store in the same folder.
-gulp.task('styles', function() {
-	  return gulp.src(options.src + '/sass/global.scss')
-		   .pipe(maps.init())
-		   .pipe(sass())
-		   .pipe(csso())
-		   .pipe(rename('all.min.css'))
-		   .pipe(maps.write('./'))
-	     .pipe(gulp.dest(options.dist + '/styles'));
+//Styles
+gulp.task('styles', function(){
+    console.log('log a');
+	  return gulp.src('src/sass/global.scss') // Compile the sass into css
+    .pipe(maps.init())
+    .pipe(sass())
+    //.pipe(csso())
+    .pipe(rename('global.css'))
+    .pipe(maps.write('./'))
+    .pipe(gulp.dest(options.dist + '/styles'));
 });
 
-// Optimize the size of the project’s JPEG and PNG files,  
-// and then copy those optimized images to the dist/content folder.
-gulp.task('images', function() {
-	  return gulp.src(options.src + '/images/*')
-		   .pipe(imagemin())
-		   .pipe(gulp.dest(options.dist + '/content'));
-});
-
-// Delete dist folder and all of the files inside
+//clean task to clean up the folders before the build runs
 gulp.task('clean', function() {
-	  return del.sync(options.dist);
+  return del.sync(options.dist);
 });
 
-// Build task will run after clean, scripts, styles and images tasks run.
-// The build task copies /index.html and /icons to the dist folder.
-gulp.task('build', ['clean', 'scripts', 'styles', 'images'], function() {
-	  return gulp.src([options.src + "/index.html", options.src + "/icons/**"], { base: options.src + '/'})
-		   .pipe(gulp.dest(options.dist));
+//minifiy images, dest dist/content
+gulp.task('images', function() {
+  return gulp.src(options.src + '/images/*')
+	.pipe(imagemin())
+	.pipe(gulp.dest(options.dist + '/content'));
 });
 
-// The gulp default task
-gulp.task('default', ['server', 'watch'], function() {
-	  gulp.start('build');
-});
-
-//local-server
-gulp.task('server', function() {
-	app.listen(port, function() {
-    console.log("Theeee Frontend Server is Running....PORT" + port);
-    app.use('/static', express.static(__dirname +'/src'));  //static files
-    app.use('/dist', express.static(__dirname +'/dist'));  //static files
-	app.use(parser.json());
+function startExpress() {
+  app.listen(port);
+  console.log("The Frontend Server is Running....PORT" + port);
+  // app.use(require('connect-livereload')());
+  app.use('/static', express.static(__dirname +'/src'));  //static files
+  app.use('/dist', express.static(__dirname +'/dist'));  //static files
 	
 	app.set('view engine', 'pug');  //This is from the Jade
 	// part of the Treehouse Express Class.
@@ -107,18 +86,32 @@ gulp.task('server', function() {
 	app.get('/', function(req, res) {
 	    res.render('index.pug'); 
 	});
-});
- 
+}
+
+//set up the build task to call the other tasks, with clean completing first.
+gulp.task('build', function() {
+  return gulp.src([options.src + '/styles/all.min.css', '/scripts/all.min.js'], { base: './'})
+	.pipe(gulp.dest(options.dist));
 });
 
-//livereload
-gulp.task('livereload', ['build'], function() {
-    app.get('/', function(req, res) {
-    res.render('index.pug'); 
-    });
+//set up the default gulp task to have build as a dependency.
+gulp.task('default', ['build']);
+
+//set up the serve task to build and serve the project while using watch for any changes
+gulp.task('serve', ['watch']);
+
+gulp.task('startExpress', function(){
+  startExpress();
 });
 
-//watch the file changes to trigger livereload
-gulp.task('watch', function() {
-  gulp.watch(allSources, ['livereload']);
+var directories = ['src/sass/**/*.scss', 'src/js/**/*.js', 'src/templates/index.pug'];
+
+gulp.task('test1', [], function() {
+  startExpress();
+	livereload.listen(8081);
+	gulp.watch(directories, function(){
+	  gulp.src(directories).pipe(livereload());
+	});
 });
+	
+	
