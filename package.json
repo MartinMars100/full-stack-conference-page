@@ -7,6 +7,7 @@
   "devDependencies": {
     "api-router": "^0.1.10",
     "body-parser": "^1.17.1",
+    "connect": "^3.6.1",
     "connect-livereload": "^0.6.0",
     "del": "^2.2.2",
     "express": "^4.15.2",
@@ -22,6 +23,7 @@
     "gulp-sourcemaps": "^2.5.1",
     "gulp-uglify": "^2.1.2",
     "gulp-useref": "^3.1.2",
+    "livereload": "^0.6.2",
     "opn": "^5.0.0",
     "pug": "^2.0.0-beta.12",
     "run-sequence": "^1.2.2",

@@ -13,14 +13,9 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     maps = require('gulp-sourcemaps'),
      del = require('del'),
-imagemin = require('gulp-imagemin'),
-     iff = require('gulp-if'),
-csso = require('gulp-csso'),
-webserver = require('gulp-connect'),
+  imagemin = require('gulp-imagemin'),
 livereload = require('gulp-livereload'),
-runSequence = require('run-sequence'),
-cssmin = require('gulp-clean-css'),
-opn = require('opn');
+   connect = require('connect');
 
 var options = {
     src: 'src',
@@ -57,7 +52,8 @@ gulp.task('styles', function(){
     //.pipe(csso())
     .pipe(rename('global.css'))
     .pipe(maps.write('./'))
-    .pipe(gulp.dest(options.dist + '/styles'));
+    .pipe(gulp.dest(options.dist + '/styles'))
+    .pipe(livereload());
 });
 
 //clean task to clean up the folders before the build runs
@@ -73,9 +69,13 @@ gulp.task('images', function() {
 });
 
 function startExpress() {
-  app.listen(port);
+  app.listen(8080);
   console.log("The Frontend Server is Running....PORT" + port);
   // app.use(require('connect-livereload')());
+  
+  // app.use(require('livereload')(
+  //   { port: 8081 }));
+  
   app.use('/static', express.static(__dirname +'/src'));  //static files
   app.use('/dist', express.static(__dirname +'/dist'));  //static files
 	
@@ -106,12 +106,28 @@ gulp.task('startExpress', function(){
 
 var directories = ['src/sass/**/*.scss', 'src/js/**/*.js', 'src/templates/index.pug'];
 
+gulp.task('watchStyles', function(){ 
+  livereload.listen(8081);
+  gulp.watch(['src/sass/**/*.scss'], ['pug']);
+});
+
+gulp.task('pug', ['styles'], function(){
+    // livereload.listen(8081);
+    return gulp.src('templates/index.pug')
+    .pipe(livereload());
+});
+
 gulp.task('test1', [], function() {
   startExpress();
-	livereload.listen(8081);
-	gulp.watch(directories, function(){
-	  gulp.src(directories).pipe(livereload());
-	});
+//   gulp.watch(['src/sass/**/*.scss'], ['styles', 'pug']); 
+// 	livereload.listen(8081);
+// 	gulp.watch(directories, function(){
+// 	  gulp.src(directories).pipe(livereload());
+// 	});
 });
-	
-	
+
+// gulp.watch(['src/sass/**/*.scss'], ['styles', 'pug']); 
+// 	livereload.listen(8081);
+// 	gulp.watch(directories, function(){
+// 	  gulp.src(directories).pipe(livereload());
+// 	});
