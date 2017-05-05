@@ -69,12 +69,8 @@ gulp.task('images', function() {
 });
 
 function startExpress() {
-  app.listen(8080);
+  app.listen(port);
   console.log("The Frontend Server is Running....PORT" + port);
-  // app.use(require('connect-livereload')());
-  
-  // app.use(require('livereload')(
-  //   { port: 8081 }));
   
   app.use('/static', express.static(__dirname +'/src'));  //static files
   app.use('/dist', express.static(__dirname +'/dist'));  //static files
@@ -104,30 +100,16 @@ gulp.task('startExpress', function(){
   startExpress();
 });
 
-var directories = ['src/sass/**/*.scss', 'src/js/**/*.js', 'src/templates/index.pug'];
+// var directories = ['src/sass/**/*.scss', 'src/js/**/*.js', 'src/templates/index.pug'];
 
 gulp.task('watchStyles', function(){ 
-  livereload.listen(8081);
+  livereload.listen();
   gulp.watch(['src/sass/**/*.scss'], ['pug']);
 });
 
 gulp.task('pug', ['styles'], function(){
     // livereload.listen(8081);
-    return gulp.src('templates/index.pug')
+    console.log('log pugReload');
+    return gulp.src('src/templates/index.pug')
     .pipe(livereload());
 });
-
-gulp.task('test1', [], function() {
-  startExpress();
-//   gulp.watch(['src/sass/**/*.scss'], ['styles', 'pug']); 
-// 	livereload.listen(8081);
-// 	gulp.watch(directories, function(){
-// 	  gulp.src(directories).pipe(livereload());
-// 	});
-});
-
-// gulp.watch(['src/sass/**/*.scss'], ['styles', 'pug']); 
-// 	livereload.listen(8081);
-// 	gulp.watch(directories, function(){
-// 	  gulp.src(directories).pipe(livereload());
-// 	});
