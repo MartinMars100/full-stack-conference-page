@@ -1,3 +1,4 @@
+'use strict';
 $( document ).ready(function() {
  // check to see if watch works -------
   $('textarea').autogrow({onInitialize: true});

@@ -1,22 +1,26 @@
-"use strict";
-var express = require('express');
-var app = express();
-var path = require('path');
+'use strict';
 
 var port = process.env.PORT;
 
 //require modules
-var gulp = require('gulp'),
-  concat = require('gulp-concat'),
-  uglify = require('gulp-uglify'),
-  rename = require('gulp-rename'),
-    sass = require('gulp-sass'),
-    maps = require('gulp-sourcemaps'),
-     del = require('del'),
+  var gulp = require('gulp'),
+   express = require('express'),
+      path = require('path'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    rename = require('gulp-rename'),
+      sass = require('gulp-sass'),
+      maps = require('gulp-sourcemaps'),
+       del = require('del'),
   imagemin = require('gulp-imagemin'),
 livereload = require('gulp-livereload'),
-   connect = require('connect');
+      http = require('http-server'),
+    reload = require('reload');  
+    
+var app = express();
 
+var templatesDir = path.join(__dirname, 'src');
+  
 var options = {
     src: 'src',
     dist: 'dist'
@@ -80,8 +84,19 @@ function startExpress() {
 	app.set('views', __dirname + '/src/templates'); 
 	
 	app.get('/', function(req, res) {
-	    res.render('index.pug'); 
+	   // res.render('index.pug'); 
+	   res.sendFile(path.join(templatesDir, 'index.pug')); 
 	});
+	
+// 	var server = http.createServer(app);
+	
+  // Reload code here
+  reload(app);
+  
+  // server.listen(app.get('port'), function(){
+  //   console.log("Web server listening on port " + app.get('port'));
+  // });
+  
 }
 
 //set up the build task to call the other tasks, with clean completing first.
@@ -108,8 +123,5 @@ gulp.task('watchStyles', function(){
 });
 
 gulp.task('pug', ['styles'], function(){
-    // livereload.listen(8081);
     console.log('log pugReload');
-    return gulp.src('src/templates/index.pug')
-    .pipe(livereload());
 });

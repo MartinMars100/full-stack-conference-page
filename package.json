@@ -5,10 +5,6 @@
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
-    "api-router": "^0.1.10",
-    "body-parser": "^1.17.1",
-    "connect": "^3.6.1",
-    "connect-livereload": "^0.6.0",
     "del": "^2.2.2",
     "express": "^4.15.2",
     "gulp": "^3.9.1",
@@ -20,14 +16,14 @@
     "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-sourcemaps": "^2.5.1",
+    "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^2.1.2",
     "gulp-useref": "^3.1.2",
+    "http-server": "^0.10.0",
     "livereload": "^0.6.2",
-    "opn": "^5.0.0",
+    "path": "^0.12.7",
     "pug": "^2.0.0-beta.12",
-    "run-sequence": "^1.2.2",
-    "tiny-lr": "^1.0.4"
+    "reload": "^1.1.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
