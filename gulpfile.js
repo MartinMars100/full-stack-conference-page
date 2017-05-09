@@ -58,7 +58,7 @@ gulp.task('styles', function(){
     .pipe(rename('global.css'))
     .pipe(maps.write('./'))
     .pipe(gulp.dest(options.dist + '/styles'))
-    .pipe(livereload());
+    .pipe(connect.reload());
 });
 
 //clean task to clean up the folders before the build runs
@@ -73,21 +73,6 @@ gulp.task('images', function() {
 	.pipe(gulp.dest(options.dist + '/content'));
 });
 
-function startExpress() {
-  app.listen(port);
-  console.log("The Frontend Server is Running....PORT" + port);
-  
-  app.use('/static', express.static(__dirname +'/src'));  //static files
-  app.use('/dist', express.static(__dirname +'/dist'));  //static files
-	
-	app.set('view engine', 'pug');  
-	app.set('views', __dirname + '/src/templates'); 
-	
-	app.get('/', function(req, res) {
-	    res.render('index.pug'); 
-	});
-}
-
 //set up the build task to call the other tasks, with clean completing first.
 gulp.task('build', function() {
   return gulp.src([options.src + '/styles/all.min.css', '/scripts/all.min.js'], { base: './'})
@@ -100,25 +85,16 @@ gulp.task('build', function() {
 //set up the serve task to build and serve the project while using watch for any changes
 gulp.task('serve', ['watch']);
 
-
 gulp.task('watchStyles', function(){ 
   gulp.watch(['src/sass/**/*.scss'], ['styles']);
 });
 
 gulp.task('webserver', function() {
-  connect.server(port);
-  // connect.listen(port);
+  connect.server({
+    port: 8080,
+    livereload: true  
+  });
   console.log("The Gulp Server is Running....PORT" + port);
-  
-//   connect.use('/static', express.static(__dirname +'/src'));  //static files
-//   connect.use('/dist', express.static(__dirname +'/dist'));  //static files
-	
-// 	connect.set('view engine', 'pug');  
-// 	connect.set('views', __dirname + '/src/templates'); 
-	
-// 	connect.get('/', function(req, res) {
-// 	    res.render('index.pug'); 
-// 	});
 });
  
 gulp.task('default', ['webserver']);
