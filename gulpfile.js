@@ -13,9 +13,7 @@ var port = process.env.PORT;
       maps = require('gulp-sourcemaps'),
        del = require('del'),
   imagemin = require('gulp-imagemin'),
-livereload = require('gulp-livereload'),
-      http = require('http-server'),
-    reload = require('reload');  
+livereload = require('gulp-livereload');
     
 var app = express();
 
@@ -79,24 +77,12 @@ function startExpress() {
   app.use('/static', express.static(__dirname +'/src'));  //static files
   app.use('/dist', express.static(__dirname +'/dist'));  //static files
 	
-	app.set('view engine', 'pug');  //This is from the Jade
-	// part of the Treehouse Express Class.
+	app.set('view engine', 'pug');  
 	app.set('views', __dirname + '/src/templates'); 
 	
 	app.get('/', function(req, res) {
-	   // res.render('index.pug'); 
-	   res.sendFile(path.join(templatesDir, 'index.pug')); 
+	    res.render('index.pug'); 
 	});
-	
-// 	var server = http.createServer(app);
-	
-  // Reload code here
-  reload(app);
-  
-  // server.listen(app.get('port'), function(){
-  //   console.log("Web server listening on port " + app.get('port'));
-  // });
-  
 }
 
 //set up the build task to call the other tasks, with clean completing first.
@@ -115,13 +101,7 @@ gulp.task('startExpress', function(){
   startExpress();
 });
 
-// var directories = ['src/sass/**/*.scss', 'src/js/**/*.js', 'src/templates/index.pug'];
-
 gulp.task('watchStyles', function(){ 
-  livereload.listen();
-  gulp.watch(['src/sass/**/*.scss'], ['pug']);
+  gulp.watch(['src/sass/**/*.scss'], ['styles']);
 });
 
-gulp.task('pug', ['styles'], function(){
-    console.log('log pugReload');
-});
