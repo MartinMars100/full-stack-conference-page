@@ -13,9 +13,12 @@ var port = process.env.PORT;
       maps = require('gulp-sourcemaps'),
        del = require('del'),
   imagemin = require('gulp-imagemin'),
+  connect  = require('gulp-connect'),
 livereload = require('gulp-livereload');
     
-var app = express();
+// var app = express();
+// var app = gulp-connect();
+
 
 var templatesDir = path.join(__dirname, 'src');
   
@@ -92,16 +95,30 @@ gulp.task('build', function() {
 });
 
 //set up the default gulp task to have build as a dependency.
-gulp.task('default', ['build']);
+// gulp.task('default', ['build']);
 
 //set up the serve task to build and serve the project while using watch for any changes
 gulp.task('serve', ['watch']);
 
-gulp.task('startExpress', function(){
-  startExpress();
-});
 
 gulp.task('watchStyles', function(){ 
   gulp.watch(['src/sass/**/*.scss'], ['styles']);
 });
 
+gulp.task('webserver', function() {
+  connect.server(port);
+  // connect.listen(port);
+  console.log("The Gulp Server is Running....PORT" + port);
+  
+//   connect.use('/static', express.static(__dirname +'/src'));  //static files
+//   connect.use('/dist', express.static(__dirname +'/dist'));  //static files
+	
+// 	connect.set('view engine', 'pug');  
+// 	connect.set('views', __dirname + '/src/templates'); 
+	
+// 	connect.get('/', function(req, res) {
+// 	    res.render('index.pug'); 
+// 	});
+});
+ 
+gulp.task('default', ['webserver']);
