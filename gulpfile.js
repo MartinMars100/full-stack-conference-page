@@ -87,7 +87,7 @@ gulp.task('serve', ['watch']);
 // });
 
 gulp.task('webserver', function() {
-  connect.server({
+    connect.server({
     port: process.env.PORT,
     ip: process.env.IP,
     // livereload: true
@@ -101,24 +101,24 @@ gulp.task('webserver', function() {
  
 gulp.task('default', ['webserver']);
 
-// gulp.task('livereload', function() {
-//   gulp.src('src/sass/**/*.scss')
-//   .pipe(watch('src/sass/**/*.scss'), ['styles'])
-//   .pipe(connect.reload());
-// });
+gulp.task('livereload', function() {
+  gulp.src('src/sass/**/*.scss')
+  .pipe(watch('src/sass/**/*.scss'), ['styles'])
+  .pipe(connect.reload());
+});
 
-// gulp.task('watch', function() {
-//   gulp.watch('src/sass/**/*.scss', ['styles']);
-//   // gulp.watch('src/sass/**/*.scss');
-// })
+gulp.task('watch', function() {
+  gulp.watch('src/sass/**/*.scss', ['styles']);
+  // gulp.watch('src/sass/**/*.scss');
+});
 
-// gulp.task('less', function() {
-//   gulp.src('src/sass/global.scss')
-//     .pipe(less())
-//     .pipe(rename('less.global.css'))
-//     .pipe(gulp.dest(options.dist + '/styles'))
-//     .pipe(connect.reload());
-// });
+gulp.task('less', function() {
+  gulp.src('src/sass/global.scss')
+    .pipe(less())
+    .pipe(rename('less.global.css'))
+    .pipe(gulp.dest(options.dist + '/styles'))
+    .pipe(connect.reload());
+});
  
 gulp.task('watch', function() {
     gulp.watch('src/sass/global.scss', ['styles']);
