@@ -54,7 +54,8 @@ gulp.task('styles', function(){
     //.pipe(csso())
     .pipe(rename('global.css'))
     .pipe(maps.write('./'))
-    .pipe(gulp.dest(options.dist + '/styles'));
+    .pipe(gulp.dest(options.dist + '/styles'))
+    .pipe(connect.reload());
 });
 
 //clean task to clean up the folders before the build runs
@@ -87,11 +88,11 @@ gulp.task('serve', ['watch']);
 
 gulp.task('webserver', function() {
   connect.server({
-    port: port,
-    ip: ip,
+    port: process.env.PORT,
+    ip: process.env.IP,
     livereload: {
-      port: port,
-      ip: ip
+      port: process.env.PORT,
+      ip: process.env.IP
     }
   });
   console.log("Server is Running....PORT " + port + " IP " + ip);
@@ -110,13 +111,14 @@ gulp.task('default', ['webserver']);
 //   // gulp.watch('src/sass/**/*.scss');
 // })
 
-gulp.task('less', function() {
-  gulp.src('src/sass/**/*.scss')
-    .pipe(less())
-    .pipe(gulp.dest(options.dist + '/styles'))
-    .pipe(connect.reload());
-});
+// gulp.task('less', function() {
+//   gulp.src('src/sass/global.scss')
+//     .pipe(less())
+//     .pipe(rename('less.global.css'))
+//     .pipe(gulp.dest(options.dist + '/styles'))
+//     .pipe(connect.reload());
+// });
  
 gulp.task('watch', function() {
-    gulp.watch('src/sass/**/*.scss', ['styles', 'less']);
+    gulp.watch('src/sass/global.scss', ['styles']);
 })
