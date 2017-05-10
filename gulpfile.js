@@ -1,6 +1,7 @@
 'use strict';
 
 var port = process.env.PORT;
+var ip = process.env.IP;
 
 //require modules
   var gulp = require('gulp'),
@@ -14,14 +15,10 @@ var port = process.env.PORT;
        del = require('del'),
   imagemin = require('gulp-imagemin'),
   connect  = require('gulp-connect'),
-livereload = require('gulp-livereload');
-    
-// var app = express();
-// var app = gulp-connect();
+     watch = require('gulp-watch'),
+      less = require('gulp-less');
 
 
-var templatesDir = path.join(__dirname, 'src');
-  
 var options = {
     src: 'src',
     dist: 'dist'
@@ -57,8 +54,7 @@ gulp.task('styles', function(){
     //.pipe(csso())
     .pipe(rename('global.css'))
     .pipe(maps.write('./'))
-    .pipe(gulp.dest(options.dist + '/styles'))
-    .pipe(connect.reload());
+    .pipe(gulp.dest(options.dist + '/styles'));
 });
 
 //clean task to clean up the folders before the build runs
@@ -85,16 +81,42 @@ gulp.task('build', function() {
 //set up the serve task to build and serve the project while using watch for any changes
 gulp.task('serve', ['watch']);
 
-gulp.task('watchStyles', function(){ 
-  gulp.watch(['src/sass/**/*.scss'], ['styles']);
-});
+// gulp.task('watchStyles', function(){ 
+//   gulp.watch(['src/sass/**/*.scss'], ['styles']);
+// });
 
 gulp.task('webserver', function() {
   connect.server({
-    port: 8080,
-    livereload: true  
+    port: port,
+    ip: ip,
+    livereload: {
+      port: port,
+      ip: ip
+    }
   });
-  console.log("The Gulp Server is Running....PORT" + port);
+  console.log("Server is Running....PORT " + port + " IP " + ip);
 });
  
 gulp.task('default', ['webserver']);
+
+// gulp.task('livereload', function() {
+//   gulp.src('src/sass/**/*.scss')
+//   .pipe(watch('src/sass/**/*.scss'), ['styles'])
+//   .pipe(connect.reload());
+// });
+
+// gulp.task('watch', function() {
+//   gulp.watch('src/sass/**/*.scss', ['styles']);
+//   // gulp.watch('src/sass/**/*.scss');
+// })
+
+gulp.task('less', function() {
+  gulp.src('src/sass/**/*.scss')
+    .pipe(less())
+    .pipe(gulp.dest(options.dist + '/styles'))
+    .pipe(connect.reload());
+});
+ 
+gulp.task('watch', function() {
+    gulp.watch('src/sass/**/*.scss', ['styles', 'less']);
+})
