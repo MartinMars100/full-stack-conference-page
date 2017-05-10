@@ -90,6 +90,7 @@ gulp.task('webserver', function() {
   connect.server({
     port: process.env.PORT,
     ip: process.env.IP,
+    // livereload: true
     livereload: {
       port: 8081,
       ip: process.env.IP
