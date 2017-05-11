@@ -99,7 +99,7 @@ gulp.task('livereload', function() {
   .pipe(connect.reload());
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['serve'], function() {
   gulp.watch('src/sass/**/*.scss', ['styles']);
   gulp.watch('src/js/**/*.js', ['scripts']);
 });
