@@ -71,22 +71,13 @@ gulp.task('images', function() {
 });
 
 //set up the build task to call the other tasks, with clean completing first.
-gulp.task('build', function() {
+gulp.task('build', ['clean'], function() {
+  gulp.start(['styles', 'scripts', 'images']);
   return gulp.src([options.src + '/styles/all.min.css', '/scripts/all.min.js'], { base: './'})
 	.pipe(gulp.dest(options.dist));
 });
 
-//set up the default gulp task to have build as a dependency.
-// gulp.task('default', ['build']);
-
-//set up the serve task to build and serve the project while using watch for any changes
-gulp.task('serve', ['watch']);
-
-// gulp.task('watchStyles', function(){ 
-//   gulp.watch(['src/sass/**/*.scss'], ['styles']);
-// });
-
-gulp.task('webserver', function() {
+gulp.task("serve", ['build'], function() {
     connect.server({
     port: process.env.PORT,
     ip: process.env.IP,
@@ -99,7 +90,7 @@ gulp.task('webserver', function() {
   console.log("Server is Running....PORT " + port + " IP " + ip);
 });
  
-gulp.task('default', ['webserver']);
+gulp.task('default', ['serve']);
 
 gulp.task('livereload', function() {
   gulp.src('src/sass/**/*.scss')
