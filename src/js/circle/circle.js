@@ -1,7 +1,7 @@
-'use strict';
 $( document ).ready(function() {
- // check to see if watch works -------
+
   $('textarea').autogrow({onInitialize: true});
+
 
   //Cloner for infinite input lists
   $(".circle--clone--list").on("click", ".circle--clone--add", function(){
@@ -50,5 +50,8 @@ $( document ).ready(function() {
   input.wrap(function() {
     return "<a class='button " + state + "'>" + text + "</div>";
   });
+
+
+
 
 });

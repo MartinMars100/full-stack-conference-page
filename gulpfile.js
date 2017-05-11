@@ -5,8 +5,6 @@ var ip = process.env.IP;
 
 //require modules
   var gulp = require('gulp'),
-   express = require('express'),
-      path = require('path'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
@@ -15,8 +13,7 @@ var ip = process.env.IP;
        del = require('del'),
   imagemin = require('gulp-imagemin'),
   connect  = require('gulp-connect'),
-     watch = require('gulp-watch'),
-      less = require('gulp-less');
+     watch = require('gulp-watch');
 
 
 var options = {
@@ -104,13 +101,6 @@ gulp.task('watch', ['serve'], function() {
   gulp.watch('src/js/**/*.js', ['scripts']);
 });
 
-gulp.task('less', function() {
-  gulp.src('src/sass/global.scss')
-    .pipe(less())
-    .pipe(rename('less.global.css'))
-    .pipe(gulp.dest(options.dist + '/styles'))
-    .pipe(connect.reload());
-});
  
 // gulp.task('watch', function() {
 //     gulp.watch('src/sass/global.scss', ['styles']);
