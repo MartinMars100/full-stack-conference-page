@@ -112,6 +112,6 @@ gulp.task('less', function() {
     .pipe(connect.reload());
 });
  
-gulp.task('watch', function() {
-    gulp.watch('src/sass/global.scss', ['styles']);
-})
+// gulp.task('watch', function() {
+//     gulp.watch('src/sass/global.scss', ['styles']);
+// })
