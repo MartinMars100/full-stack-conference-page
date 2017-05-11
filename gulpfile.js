@@ -42,7 +42,8 @@ gulp.task("scripts", ["concatScripts"], function() {
     .pipe(uglify(options.dist + 'scripts/global.js'))
     .pipe(rename('app.min.js'))
     .pipe(maps.write('./'))
-    .pipe(gulp.dest(options.dist + '/scripts'));
+    .pipe(gulp.dest(options.dist + '/scripts'))
+    .pipe(connect.reload());
 });
 
 //Styles
@@ -100,7 +101,7 @@ gulp.task('livereload', function() {
 
 gulp.task('watch', function() {
   gulp.watch('src/sass/**/*.scss', ['styles']);
-  // gulp.watch('src/sass/**/*.scss');
+  gulp.watch('src/js/**/*.js', ['scripts']);
 });
 
 gulp.task('less', function() {
