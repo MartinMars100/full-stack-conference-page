@@ -1,9 +1,9 @@
 Treehouse Techdegree Project 8
 This code uses Gulp to Build a Front End Website
 
-The website shows several images describing Colorado
-vacation destinations in the early 1970's. There are 
-short paragraphs describing each image.
+The website shows information about in up-coming 
+Full Stack Conference. The website features bootstrap
+to create the layout, navigation and buttons.
 
 Run the npm install command to install all of the dependencies 
   for the build process.
