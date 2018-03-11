@@ -75,7 +75,7 @@ gulp.task('build', ['clean'], function() {
 	.pipe(gulp.dest(options.dist));
 });
 
-gulp.task("serve", ['build'], function() {
+gulp.task("serve", function() {
     connect.server({
     port: process.env.PORT,
     ip: process.env.IP,
